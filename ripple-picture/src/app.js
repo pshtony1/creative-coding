@@ -31,15 +31,14 @@ class App {
     };
 
     this.image = new Image();
-    this.image.src = "../img/night.jpg";
+    this.image.src = "img/night.jpg";
     this.image.onload = () => {
       this.isLoaded = true;
+      this.canvas.addEventListener("pointerdown", this.onClick.bind(this));
       this.drawImage();
     };
 
     window.requestAnimationFrame(this.animate.bind(this));
-
-    this.canvas.addEventListener("pointerdown", this.onClick.bind(this));
   }
 
   resize() {
@@ -161,8 +160,6 @@ class App {
         dot.animate(this.ctx);
       }
     }
-
-    console.log(this.dots[0].radiusV);
   }
 
   onClick(e) {
