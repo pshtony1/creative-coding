@@ -66,6 +66,18 @@ export class Polygon {
   resize(stageWidth, stageHeight) {
     this.x = stageWidth / 2;
     this.y = stageHeight * 1.8;
+
+    // const stageHeight = document.body.clientHeight;
+    // const maxHeight = window.screen.availHeight;
+    // let resizeFactor = stageHeight / maxHeight;
+
+    // if (resizeFactor < 0.7) {
+    //   resizeFactor *= 1 / 0.7;
+    //   this.radius = stageHeight * 1.2 * resizeFactor;
+    // }
+
+    // console.log(this.radius);
+
     this.radius = stageHeight * 1.2;
   }
 
@@ -116,12 +128,16 @@ export class Polygon {
   renderBox(ctx, x, y, color, angleGap, angle, index) {
     const boxX = this.radius * Math.cos(angle * index + this.rotate + Math.PI);
     const sizeFactor = 1 - Math.abs(boxX) / this.radius;
-    let size = sizeFactor * 60 + 140;
+    let size = sizeFactor * 60 + 120;
 
     const stageHeight = document.body.clientHeight;
     const maxHeight = window.screen.availHeight;
-    const resizeFactor = stageHeight / maxHeight;
-    size *= resizeFactor;
+    let resizeFactor = stageHeight / maxHeight;
+
+    if (resizeFactor < 0.7) {
+      resizeFactor *= 1 / 0.7;
+      size *= resizeFactor;
+    }
 
     ctx.save();
 
