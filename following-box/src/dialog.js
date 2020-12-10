@@ -4,8 +4,6 @@ const FOLLOW_SPEED = 0.08;
 const ROTATE_SPEED = 0.12;
 const MAX_ANGLE = 30;
 const dt = 1000 / 60;
-const WIDTH = 260;
-const HEIGHT = 260;
 
 export class Dialog {
   constructor() {
@@ -20,13 +18,28 @@ export class Dialog {
     this.rotation = 20; // current angle
     this.sideValue = 0;
     this.isDown = false;
+    this.WIDTH = 0;
+    this.HEIGHT = 0;
   }
 
-  resize(stageWidth, stageHeight) {
-    this.pos.x = Math.random() * (stageWidth - WIDTH);
-    this.pos.y = Math.random() * (stageHeight - HEIGHT);
+  resize(stageWidth, stageHeight, previousWidth, previousHeight, init) {
+    this.WIDTH = Math.min(stageWidth / 6, 260);
+    this.HEIGHT = Math.min(stageWidth / 6, 260);
+
+    if (init) {
+      this.pos.x = Math.random() * (stageWidth - this.WIDTH);
+      this.pos.y = Math.random() * (stageHeight - this.HEIGHT);
+    }
+
     this.target = this.pos.clone();
     this.prevPos = this.pos.clone();
+
+    this.balancePosition(
+      stageWidth,
+      stageHeight,
+      previousWidth,
+      previousHeight
+    );
   }
 
   animate(ctx) {
@@ -65,20 +78,20 @@ export class Dialog {
 			 tmpPos - this.origin = this.pos 이므로,
 			 -this.origin의 좌표를 시작점으로 만들어주어야 올바르게 그려진다.
 		*/
-    ctx.fillRect(-this.origin.x, -this.origin.y, WIDTH, HEIGHT);
+    ctx.fillRect(-this.origin.x, -this.origin.y, this.WIDTH, this.HEIGHT);
     ctx.restore();
   }
 
   down(point) {
-    if (point.collide(this.pos, WIDTH, HEIGHT)) {
+    if (point.collide(this.pos, this.WIDTH, this.HEIGHT)) {
       this.isDown = true;
       this.startPos = this.pos.clone();
       this.downPos = point.clone();
       this.mousePos = point.clone().substract(this.pos);
 
-      const xRatioValue = this.mousePos.x / WIDTH;
-      this.origin.x = WIDTH * xRatioValue;
-      this.origin.y = (HEIGHT * this.mousePos.y) / HEIGHT;
+      const xRatioValue = this.mousePos.x / this.WIDTH;
+      this.origin.x = this.WIDTH * xRatioValue;
+      this.origin.y = (this.HEIGHT * this.mousePos.y) / this.HEIGHT;
 
       this.sideValue = xRatioValue - 0.5;
 
@@ -96,5 +109,10 @@ export class Dialog {
 
   up() {
     this.isDown = false;
+  }
+
+  balancePosition(stageWidth, stageHeight, previousWidth, previousHeight) {
+    this.pos.x *= stageWidth / previousWidth;
+    this.pos.y *= stageHeight / previousHeight;
   }
 }

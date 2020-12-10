@@ -63,7 +63,13 @@ export class Polygon {
     }
   }
 
-  animate(ctx, moveX, stageCenter) {
+  resize(stageWidth, stageHeight) {
+    this.x = stageWidth / 2;
+    this.y = stageHeight * 1.8;
+    this.radius = stageHeight * 1.2;
+  }
+
+  animate(ctx, moveX) {
     ctx.save();
 
     const angle = PI2 / this.sides;
@@ -110,7 +116,12 @@ export class Polygon {
   renderBox(ctx, x, y, color, angleGap, angle, index) {
     const boxX = this.radius * Math.cos(angle * index + this.rotate + Math.PI);
     const sizeFactor = 1 - Math.abs(boxX) / this.radius;
-    const size = sizeFactor * 80 + 120;
+    let size = sizeFactor * 60 + 140;
+
+    const stageHeight = document.body.clientHeight;
+    const maxHeight = window.screen.availHeight;
+    const resizeFactor = stageHeight / maxHeight;
+    size *= resizeFactor;
 
     ctx.save();
 

@@ -8,6 +8,16 @@ class App {
 
     this.pixelRatio = window.devicePixelRatio > 1 ? 2 : 1;
 
+    this.stageWidth = document.body.clientWidth;
+    this.stageHeight = document.body.clientHeight;
+    this.polygon = new Polygon(
+      this.stageWidth / 2,
+      this.stageHeight * 1.8,
+      this.stageHeight * 1.2,
+      41
+    );
+    console.log(this.polygon);
+
     window.addEventListener("resize", this.resize.bind(this));
     this.resize();
 
@@ -29,12 +39,7 @@ class App {
     this.canvas.height = this.stageHeight * this.pixelRatio;
     this.ctx.scale(2, 2);
 
-    this.polygon = new Polygon(
-      this.stageWidth / 2,
-      this.stageHeight * 1.8,
-      this.stageHeight * 1.2,
-      39
-    );
+    this.polygon.resize(this.stageWidth, this.stageHeight);
   }
 
   animate() {

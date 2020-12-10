@@ -18,8 +18,20 @@ class App {
       this.items[i] = new Dialog();
     }
 
+    this.previousWidth = document.body.clientWidth;
+    this.previousHeight = document.body.clientHeight;
     window.addEventListener("resize", this.resize.bind(this));
     this.resize();
+
+    for (let i = 0; i < this.total; i++) {
+      this.items[i].resize(
+        this.stageWidth,
+        this.stageHeight,
+        this.previousWidth,
+        this.previousHeight,
+        true
+      );
+    }
 
     window.requestAnimationFrame(this.animate.bind(this));
 
@@ -28,7 +40,7 @@ class App {
     document.addEventListener("pointerup", this.onUp.bind(this));
   }
 
-  resize() {
+  resize(e) {
     this.stageWidth = document.body.clientWidth;
     this.stageHeight = document.body.clientHeight;
 
@@ -46,8 +58,17 @@ class App {
     this.ctx.lineWidth = 2;
 
     for (let i = 0; i < this.items.length; i++) {
-      this.items[i].resize(this.stageWidth, this.stageHeight);
+      this.items[i].resize(
+        this.stageWidth,
+        this.stageHeight,
+        this.previousWidth,
+        this.previousHeight,
+        false
+      );
     }
+
+    this.previousWidth = this.stageWidth;
+    this.previousHeight = this.stageHeight;
   }
 
   animate() {
